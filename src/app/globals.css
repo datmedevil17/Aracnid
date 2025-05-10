@@ -1,11 +1,118 @@
 @import "tailwindcss";
 
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* 🌌 Custom CSS Variables for Theme Colors */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --border: 222.2 84% 4.9%;
+  --input: 210 40% 96.1%;
+  --ring: 215 20.2% 65.1%;
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --primary: 240 100% 50%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 270 100% 40%;
+  --secondary-foreground: 210 40% 98%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 210 40% 98%;
+  --muted: 210 34% 80%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 260 100% 70%;
+  --accent-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --card: 240 20% 10%;
+  --card-foreground: 210 40% 98%;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 15, 5, 32;
 }
+
+@layer base{
+  @font-face {
+    font-family: 'circular-web';
+    src: url('/fonts/circularweb-book.woff2') format('woff2')
+  }
+
+  @font-face {
+    font-family: 'robert-regular';
+    src: url('/fonts/robert-regular.woff2') format('woff2')
+  }
+
+  @font-face {
+    font-family: 'general';
+    src: url('/fonts/general.woff2') format('woff2')
+  }
+
+  @font-face {
+    font-family: 'robert-medium';
+    src: url('/fonts/robert-medium.woff2') format('woff2')
+  }
+
+  @font-face {
+    font-family: 'zentry-regular';
+    src: url('/fonts/zentry-regular.woff2') format('woff2')
+  }
+
+  @font-face {
+    font-family: 'SDGlitch';
+    src: url('/fonts/SDGlitch.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+}
+
+/* ✨ Glassmorphism + Neon Utility Layer */
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .neon-blue {
+    box-shadow: 0 0 5px #00FFFF, 0 0 20px #00FFFF;
+  }
+
+  .neon-purple {
+    box-shadow: 0 0 5px #FF00FF, 0 0 20px #FF00FF;
+  }
+
+  .bg-cyberpunk-dark {
+    background-color: #0D0221;
+  }
+
+  .text-cyberpunk-blue {
+    color: #00FFFF;
+  }
+
+  .text-cyberpunk-purple {
+    color: #FF00FF;
+  }
+
+  .font-circular {
+    font-family: 'circular-web', sans-serif;
+  }
+
+  .font-zentry {
+    font-family: 'zentry-regular', sans-serif;
+  }
+
+  .font-SDGlitch {
+    font-family: 'SDGlitch', monospace;
+  }
+  .font-general {
+    font-family: 'general',sans-serif;
+  }
+  .font-robertRegular{
+     font-family: 'robert-regular', sans-serif;
+  }
+}
+
 .profile-dropdown {
   @apply relative inline-block text-left;
 }
@@ -38,7 +145,80 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
+  font-family: "Inter", sans-serif;
+}
+
+/* Custom animation for the pulse effect */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+/* Slide down animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+.delay-700 {
+  animation-delay: 700ms;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
 }
