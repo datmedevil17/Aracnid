@@ -1,21 +1,21 @@
+import { readContract, writeContract } from "@wagmi/core";
 import { config } from "@/lib/wagmi";
-import { readContract,config,writeContract} from "@wagmi/core";
-import {tokenAbi,tokenAddress,platformAbi,platformAddress} from "./contract"
+import { tokenAbi, tokenAddress, platformAbi, platformAddress } from "./contract"
 
 // Token Read Functions
 export async function getTokenName() {
-  const data = await readContract(config,{
-    address: tokenAddress,
+  const data = await readContract(config, {
     abi: tokenAbi,
+    address: tokenAddress,
     functionName: 'name'
   });
   return data;
 }
 
 export async function getTokenBalance(address) {
-  const data = await readContract(config,{
-    address: tokenAddress,
+  const data = await readContract(config, {
     abi: tokenAbi,
+    address: tokenAddress,
     functionName: 'balanceOf',
     args: [address]
   });
@@ -23,9 +23,9 @@ export async function getTokenBalance(address) {
 }
 
 export async function getAllowance(owner, spender) {
-  const data = await readContract(config,{
-    address: tokenAddress,
+  const data = await readContract(config, {
     abi: tokenAbi,
+    address: tokenAddress,
     functionName: 'allowance',
     args: [owner, spender]
   });
@@ -34,28 +34,30 @@ export async function getAllowance(owner, spender) {
 
 // Token Write Functions
 export async function approveTokens(spender, amount) {
-  const result = await writeContract(config,{
-    address: tokenAddress,
+  const result = await writeContract(config, {
     abi: tokenAbi,
+    address: tokenAddress,
     functionName: 'approve',
     args: [spender, amount]
   });
-  return result}
+  return result;
+}
 
 export async function transferTokens(recipient, amount) {
-  const result = await writeContract(config,{
-    address: tokenAddress,
+  const result = await writeContract(config, {
     abi: tokenAbi,
+    address: tokenAddress,
     functionName: 'transfer',
     args: [recipient, amount]
   });
-  return result}
+  return result;
+}
 
 // Platform Read Functions
 export async function getUserProfile(address) {
-  const data = await readContract(config,{
-    address: platformAddress,
+  const data = await readContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'getUserProfile',
     args: [address]
   });
@@ -63,9 +65,9 @@ export async function getUserProfile(address) {
 }
 
 export async function getBountyDetails(bountyId) {
-  const data = await readContract(config,{
-    address: platformAddress,
+  const data = await readContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'getBounty',
     args: [bountyId]
   });
@@ -73,9 +75,9 @@ export async function getBountyDetails(bountyId) {
 }
 
 export async function getSubmissionDetails(bountyId, submissionIndex) {
-  const data = await readContract(config,{
-    address: platformAddress,
+  const data = await readContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'getSubmission',
     args: [bountyId, submissionIndex]
   });
@@ -83,9 +85,9 @@ export async function getSubmissionDetails(bountyId, submissionIndex) {
 }
 
 export async function getActiveBountyCount() {
-  const data = await readContract(config,{
-    address: platformAddress,
+  const data = await readContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'getActiveBountyCount'
   });
   return data;
@@ -93,58 +95,64 @@ export async function getActiveBountyCount() {
 
 // Platform Write Functions
 export async function registerUser() {
-  const result = await writeContract(config,{
-    address: platformAddress,
+  const result = await writeContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'registerUser'
   });
-  return result}
+  return result;
+}
 
 export async function createBounty(title, description, requiredStake, durationInDays, value) {
-  const result = await writeContract(config,{
-    address: platformAddress,
+  const result = await writeContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'createBounty',
     args: [title, description, requiredStake, durationInDays],
     value: value
   });
-  return result}
+  return result;
+}
 
 export async function submitSolution(bountyId, solutionDetails) {
-  const result = await writeContract(config,{
-    address: platformAddress,
+  const result = await writeContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'submitSolution',
     args: [bountyId, solutionDetails]
   });
-  return result}
+  return result;
+}
 
 export async function awardBounty(bountyId, winner) {
-  const result = await writeContract(config,{
-    address: platformAddress,
+  const result = await writeContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'awardBounty',
     args: [bountyId, winner]
   });
-  return result}
+  return result;
+}
 
 export async function cancelBounty(bountyId) {
-  const result = await writeContract(config,{
-    address: platformAddress,
+  const result = await writeContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'cancelBounty',
     args: [bountyId]
   });
-  return result}
+  return result;
+}
 
 export async function processBountyExpiration(bountyId) {
-  const result = await writeContract(config,{
-    address: platformAddress,
+  const result = await writeContract(config, {
     abi: platformAbi,
+    address: platformAddress,
     functionName: 'processBountyExpiration',
     args: [bountyId]
   });
-  return result}
+  return result;
+}
 
 
 

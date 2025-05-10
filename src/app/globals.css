@@ -1,8 +1,26 @@
 @import "tailwindcss";
 
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+.profile-dropdown {
+  @apply relative inline-block text-left;
+}
+
+.dropdown-transition {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 flex items-center justify-center z-50;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  @apply bg-white p-6 rounded-lg max-w-sm w-full shadow-xl;
 }
 
 @theme inline {
