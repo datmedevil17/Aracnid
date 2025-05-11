@@ -53,7 +53,7 @@
   }
 
   @font-face {
-    font-family: 'zentry-regular';
+    font-family: 'zentry';
     src: url('/fonts/zentry-regular.woff2') format('woff2')
   }
 
@@ -99,7 +99,7 @@
   }
 
   .font-zentry {
-    font-family: 'zentry-regular', sans-serif;
+    font-family: 'zentry', sans-serif;
   }
 
   .font-SDGlitch {
@@ -111,7 +111,17 @@
   .font-robertRegular{
      font-family: 'robert-regular', sans-serif;
   }
-}
+
+  .special-font b {
+    font-family: "zentry";
+    font-feature-settings: "ss01" on;
+  }
+  
+  
+  }
+  
+
+
 
 .profile-dropdown {
   @apply relative inline-block text-left;
