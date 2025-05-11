@@ -14,6 +14,7 @@ const Navbar = () => {
   const [tokenBalance, setTokenBalance] = useState("0")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [showNavbar, setShowNavbar] = useState(true)
   const [userStats, setUserStats] = useState({
     reputation: 0,
     totalBounties: 0,
@@ -22,14 +23,20 @@ const Navbar = () => {
   })
   const { address, isConnected } = useAccount()
 
-  // Handle scroll effect for navbar
   useEffect(() => {
+    let lastScrollY = window.scrollY
+
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setScrolled(true)
-      } else {
-        setScrolled(false)
+      const currentScrollY = window.scrollY
+      setScrolled(currentScrollY > 10)
+
+      if (currentScrollY === 0 || currentScrollY < lastScrollY) {
+        setShowNavbar(true)
+      } else if (currentScrollY > lastScrollY) {
+        setShowNavbar(false)
       }
+
+      lastScrollY = currentScrollY
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -41,7 +48,6 @@ const Navbar = () => {
       if (isConnected && address) {
         try {
           const profile = await getUserProfile(address)
-          // Check if profile exists and isRegistered is true
           if (profile && profile[4]) {
             setIsRegistered(true)
             setUserStats({
@@ -52,7 +58,6 @@ const Navbar = () => {
             })
           } else {
             setIsRegistered(false)
-            // Reset stats if user is not registered
             setUserStats({
               reputation: 0,
               totalBounties: 0,
@@ -80,7 +85,6 @@ const Navbar = () => {
     }
   }
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showDropdown && !event.target.closest(".profile-dropdown")) {
@@ -94,37 +98,35 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`sticky top-0 z-50 w-full px-6 py-3 transition-all duration-300 ${scrolled ? "backdrop-blur-md bg-black/70 border-b border-white/10" : "bg-transparent"
-        }`}
+      className={`${
+        showNavbar ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
+      } sticky top-0 z-50 w-full px-6 py-3 transition-all duration-300 ease-in-out ${
+        scrolled
+          ? "backdrop-blur-md bg-black/70 border-b border-white/10"
+          : "bg-transparent"
+      }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo Section */}
-        <div className="flex items-center">
-          <Link
-            href="/"
-            className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
-          >
-            Aracnid
-          </Link>
-        </div>
+        <Link href="/" className="flex items-center space-x-2">
+          <img src="/img/logo.png" alt="Aracnid Logo" className="h-12 w-auto object-contain scale-250" />
+        </Link>
 
-        
-
-        {/* Right Section: Connect, Balance, Profile */}
+        {/* Right Section */}
         <div className="flex items-center space-x-4">
-
-          {/* Navigation Links - Desktop - moved to the right */}
+          {/* Navigation - Desktop */}
           <div className="hidden md:flex items-center space-x-6 mr-4">
             <Link href="/explore" className="text-gray-300 hover:text-white transition-colors relative group">
               Explore Bounties
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-full" />
             </Link>
             <Link href="/create" className="text-gray-300 hover:text-white transition-colors relative group">
               Create Bounty
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-full" />
             </Link>
           </div>
-          {/* Token Balance Display */}
+
+          {/* Token Balance */}
           {isConnected && (
             <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-black/40 backdrop-blur-sm border border-white/10 rounded-lg">
               <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
@@ -132,14 +134,63 @@ const Navbar = () => {
             </div>
           )}
 
-          <ConnectButton
-            chainStatus="icon"
-            showBalance={false}
-            accountStatus={{
-              smallScreen: "avatar",
-              largeScreen: "full",
-            }}
-          />
+          <ConnectButton.Custom>
+  {({
+    account,
+    chain,
+    openAccountModal,
+    openConnectModal,
+    openChainModal,
+    authenticationStatus,
+    mounted,
+  }) => {
+    const ready = mounted && authenticationStatus !== "loading"
+    const connected = ready && account && chain
+
+    return (
+      <div
+        {...(!ready && {
+          "aria-hidden": true,
+          style: { opacity: 0, pointerEvents: "none", userSelect: "none" },
+        })}
+      >
+        {(() => {
+          if (!connected) {
+            return (
+              <button
+                onClick={openConnectModal}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-2 rounded-xl transition duration-300 text-center shadow-lg shadow-blue-600/20"
+              >
+                Connect Wallet
+              </button>
+            )
+          }
+
+          if (chain.unsupported) {
+            return (
+              <button
+                onClick={openChainModal}
+                className="bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-3 rounded-xl transition duration-300"
+              >
+                Wrong network
+              </button>
+            )
+          }
+
+          return (
+            <button
+              onClick={openAccountModal}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-3 rounded-xl transition duration-300 shadow-lg shadow-blue-600/20"
+            >
+              {account.displayName}
+            </button>
+          )
+        })()}
+      </div>
+    )
+  }}
+</ConnectButton.Custom>
+
 
           {/* Register/Profile Section */}
           {isConnected && (
@@ -147,7 +198,7 @@ const Navbar = () => {
               {!isRegistered ? (
                 <button
                   onClick={handleRegister}
-                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium hover:opacity-90 transition-all hover:shadow-[0_0_10px_rgba(79,70,229,0.5)] border border-white/10"
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium hover:opacity-90 transition-all border border-white/10"
                 >
                   Register
                 </button>
@@ -166,22 +217,12 @@ const Navbar = () => {
                       <div className="p-4 space-y-3">
                         <div className="text-sm font-semibold text-white border-b border-white/10 pb-2">User Stats</div>
                         <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-400">Reputation</span>
-                            <span className="text-sm font-medium text-white">{userStats.reputation}</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-400">Total Bounties</span>
-                            <span className="text-sm font-medium text-white">{userStats.totalBounties}</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-400">Total Claimed</span>
-                            <span className="text-sm font-medium text-white">{userStats.totalClaimed}</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-400">Total Staked</span>
-                            <span className="text-sm font-medium text-white">{userStats.totalStaked}</span>
-                          </div>
+                          {Object.entries(userStats).map(([label, value]) => (
+                            <div key={label} className="flex justify-between items-center">
+                              <span className="text-sm text-gray-400 capitalize">{label.replace("total", "Total ")}</span>
+                              <span className="text-sm font-medium text-white">{value}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -191,7 +232,7 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button */}
           <button
             className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -201,24 +242,12 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
+      {/* Mobile Nav */}
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 backdrop-blur-md bg-black/80 border-b border-white/10 animate-slideDown">
           <div className="px-6 py-4 space-y-4">
-            <Link
-              href="/bounties"
-              className="block py-2 text-gray-300 hover:text-white transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Explore Bounties
-            </Link>
-            <Link
-              href="/create"
-              className="block py-2 text-gray-300 hover:text-white transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Create Bounty
-            </Link>
+            <Link href="/explore" className="block py-2 text-gray-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>Explore Bounties</Link>
+            <Link href="/create" className="block py-2 text-gray-300 hover:text-white" onClick={() => setMobileMenuOpen(false)}>Create Bounty</Link>
           </div>
         </div>
       )}

@@ -81,8 +81,8 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto grid md:grid-cols-2 items-center gap-12">
         {/* Text Content - no box structure */}
         <div className="relative">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 animate-fadeIn">
-            Decentralized Bounties. Real Rewards.
+          <h1 className="special-font text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 animate-fadeIn">
+           Decentralized Bounties. Real Rewards.
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl animate-slideUp">
             Solve challenges. Stake tokens. Earn ETH.
